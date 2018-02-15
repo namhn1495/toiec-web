@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+              crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="style.css">
+        <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+        <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+
+        <title>Toiec 600</title>
+    </head>
+
+    <body>
+        <style>
+        </style>
+        <a href="index2.html">Test En -> Vi</a>
+        <div class="flip-container" ontouchstart="this.classList.toggle('hover');" id="cardPlacer">
+            <div class="flipper">
+                <div class="front">
+                    <div class="card text-center align-middle" style="width: 100%; height: 100%; ">
+                        <div class="front-container text-center align-middle">
+                            <h5>
+                                (n): tình nguyện viên, người xung phong
+                            </h5>
+                            <p>/,vɔlən'tiə/</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="back">
+                    <div class="card text-center align-middle" style="width: 100%; height: 100%; ">
+                        <div class="back-container text-center align-middle">
+                            <p id = "idw">1</p>
+                            <p>
+                                <b>volunteer</b>
+                            </p>
+                            <p>/,vɔlən'tiə/</p>
+                            <p>Several staff members volunteered for early retirement</p>
+                            <p>Một số nhân viên tình nguyện nghỉ hưu sớm</p>
+                            <audio controls id='audio'>
+                                <!-- <source src="horse.ogg" type="audio/ogg"> -->
+                                <source src="http://600tuvungtoeic.com/audio/volunteer.mp3" type="audio/mpeg"> Your browser does not support the audio tag.
+                            </audio>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <div class="container">
+            <div class="container">
+                <div class="form-inline justify-content-center" style="text-align: center;">
+                    <div class="form-group" role="form">
+                        <label for="inputPassword2" class="sr-only">Password</label>
+                        <input type="text" class="form-control" id="inputLimit" placeholder="600">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="limitBtn">Limit number of cards</button>
+                </div>
+            </div>
+            <h2>Evaluate </h2>
+            <button type="button" class="btn btn-danger" onclick="nextWord(1,1)">Fail</button>
+            <button type="button" class="btn btn-warning" onclick="nextWord(1,2)">Hard</button>
+            <button type="button" class="btn btn-primary" onclick="nextWord(1,3)">Good</button>
+            <button type="button" class="btn btn-success" onclick="nextWord(1,4)">Easy</button>
+            
+        </div>
+        <script>
+            // $('.flipper').bind("transitionend", function (e) {
+            //     console.log('back: ' + $(".flip-container").is(':hover'));
+            //     // console.log('front: '+$(".front").css('transform'));
+            // });
+            var FAIL = 1;
+            var HARD = 2;
+            var GOOD = 3;
+            var EASY = 4;
+            function nextWord(id, answer) {
+                console.log('sending answer: ' + answer + " of id: " + id);
+                $.ajax({
+                    type: 'get',
+                    url: "NextCardServlet",
+                    data: {id: id, level: answer},
+                    success: function (msg) {
+                        $("#cardPlacer").html(msg);
+                    }
+                });
+            }
+            function tts(text){
+                responsiveVoice.speak(text, "US English Female");
+
+            }
+            $(document).ready(function () {
+//                responsiveVoice.speak("The quality of their clothes has fallen ever since they started using cheaper fabrics to make them", "US English Female");
+//                var msg = new SpeechSynthesisUtterance('The quality of their clothes has fallen ever since they started using cheaper fabrics to make them');
+//                window.speechSynthesis.speak(msg);
+                console.log("speech");
+                $('body').keypress(function (e) {
+                    if (e.which === 113) {
+                        nextWord($("#idw").text(), FAIL);
+                    }
+                    if (e.which === 119) {
+                        nextWord($("#idw").text(), HARD);
+                    }
+                    if (e.which === 101) {
+                        nextWord($("#idw").text(), GOOD);
+                    }
+                    if (e.which === 114) {
+                        nextWord($("#idw").text(), EASY);
+                    }
+                });
+
+                $(".flip-container").on({
+                    mouseenter: function () {
+                        //stuff to do on mouse enter
+//                        console.log('enter');
+                        $('audio')[0].play();
+
+                    },
+                    mouseleave: function () {
+                        //stuff to do on mouse leave
+                    }
+                });
+                $("#limitBtn").on("click", function () {
+                    $.ajax({
+                        type: 'get',
+                        url: "SetLimitServlet",
+                        data: {limit: $("#inputLimit").val()},
+                        success: function (msg) {
+                            window.location.reload();
+                        }
+                    });
+                })
+                nextWord(0, 0);
+//                console.log($("#idw").text());
+            });
+
+        </script>
+    </body>
+
+</html>
